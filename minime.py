@@ -10,17 +10,15 @@ baselevel = 3
 baseclock = 0
 attempts = 10000000
 for i in range(attempts):
-    ws = DefenderDeck(level=baselevel, clock=baseclock)
+    ws = DefenderDeck(deck=25, cx=6, level=baselevel, clock=baseclock)
     tr = AttackerDeck()
-    ws.damagecheck(1)
+    '''ws.damagecheck(1)
     ws.damagecheck(4)
-    ws.damagecheck(tr.triggerdamage())
-    ws.damagecheck(1)
-    ws.damagecheck(4)
-    ws.damagecheck(tr.triggerdamage())
-    ws.damagecheck(1)
-    ws.damagecheck(4)
-    ws.damagecheck(tr.triggerdamage())
+    ws.damagecheck(tr.triggerdamage())'''
+    for j in range(3):
+        amount = ws.mill(7)
+        for i in range(amount):
+            ws.damagecheck(3)
     combo = (ws.level, ws.clock)
     # check if the combination already exists in the dictionary
     if combo in counts:
@@ -33,7 +31,7 @@ for i in range(attempts):
 aggregate_count = attempts
 for combo, count in sorted(counts.items(), key=lambda x: (x[0][0], x[0][1])):
     
-    print(f"Combination {combo}: {aggregate_count/attempts*100} percent")
+    print(f"Combination {combo}: {aggregate_count/attempts*100} percent and [{count}] times")
     aggregate_count -= count
 
 end_time = time.time()
