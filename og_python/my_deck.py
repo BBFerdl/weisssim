@@ -1,7 +1,7 @@
 import random
 
 class AttackerDeck:
-    def __init__(self, clock=0, clockcx=0, level=3, deck=20, cx=7, wr=0, wrcx=0, trigger=6):
+    def __init__(self, clock=0, clockcx=0, level=3, deck=20, cx=7, wr=0, wrcx=0, trigger=6, wrtrigger=0):
         self.clock = clock
         self.clockcx = clockcx
         self.level = level
@@ -10,7 +10,7 @@ class AttackerDeck:
         self.wr = wr
         self.wrcx = wrcx
         self.trigger = trigger #(13*(deck20+wr0))/43=6 #quick hack before we can declare custom trigger amounts
-        
+        self.wrtrigger = wrtrigger
     def mill(self, amount):
         countcx = 0
         for i in range(amount):
@@ -18,7 +18,10 @@ class AttackerDeck:
                 self.refresh()
             rnumber = random.uniform(0, 1)
             rtracker = self.cx/self.deck
+            rtrtracker = self.trigger/self.deck
             self.deck -= 1
+            if rtrtracker > rnumber:
+                self.trigger -= 1
             if rtracker > rnumber:
                 self.cx -= 1
                 self.wr += 1 
@@ -27,7 +30,26 @@ class AttackerDeck:
             else:
                 self.wr += 1
         return countcx
-    
+    def millcounttrigger(self, amount):
+        counttrigger = 0
+        for i in range(amount):
+            if self.deck == 0:
+                self.refresh()
+            rnumber = random.uniform(0, 1)
+            rtracker = self.cx/self.deck
+            rtrtracker = self.trigger/self.deck
+            self.deck -= 1
+            if rtrtracker > rnumber:
+                self.trigger -= 1
+                self.wrtrigger += 1
+                counttrigger += 1
+            if rtracker > rnumber:
+                #self.trigger -= 1
+                self.wr += 1 
+                self.wrcx += 1
+            else:
+                self.wr += 1
+        return counttrigger
     def triggerdamage(self, triggers=1, soul=3):
         for i in range(triggers):
             if self.deck == 0:
@@ -55,12 +77,17 @@ class AttackerDeck:
         self.wr = 0
         self.cx = self.wrcx
         self.wrcx = 0
+        self.trigger += self.wrtrigger
+        self.wrtrigger = 0
         self.refreshpenalty()
 
     def refreshpenalty(self):
         rnumber = random.uniform(0, 1)
         rtracker = self.cx/self.deck
+        rtrtracker = self.trigger/self.deck
         self.deck -= 1
+        if rtrtracker > rnumber:
+            self.trigger -= 1
         if rnumber >= rtracker:
             self.sticks(1,1)
         else:
