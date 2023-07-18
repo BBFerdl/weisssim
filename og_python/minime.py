@@ -4,7 +4,6 @@ from my_deck import AttackerDeck
 import time
 
 start_time = time.time()
-
 counts = {}
 baselevel = 3
 baseclock = 0
@@ -36,7 +35,6 @@ for simu2 in range(len(cxconfiguration)):
         aggregate_count = attempts
         print(f'{configuration[simu]}/{cxconfiguration[simu2]}')
         for combo, count in sorted(counts.items(), key=lambda x: (x[0][0], x[0][1])):
-            
             percentage = aggregate_count / attempts * 100
             aggregate_count -= count
             if combo[0] < 5: #and combo[1] > 0) or (combo[0] == 4 and combo[1] == 0): # restrict damages printed
