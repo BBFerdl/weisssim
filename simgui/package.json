@@ -6,6 +6,8 @@
   "repository": "",
   "license": "MIT",
   "author": "",
+  
+  "type": "module",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -66,4 +68,5 @@
   "ember": {
     "edition": "octane"
   }
+
 }

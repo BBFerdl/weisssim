@@ -1,6 +1,6 @@
 class DefenderDeck {
     constructor(clock=0, clockcx=0, level=3, deck=20, cx=8, wr=0, wrcx=0, solutiondeck=0, solutiondeckcx=0) {
-        this.clock = clock;
+        this.clock = 0;
         this.clockcx = clockcx;
         this.level = level;
         this.deck = deck;
@@ -155,7 +155,7 @@ class DefenderDeck {
         if (this.clock > 6) {
             this.clock = this.clock % 7;
             this.wr += 6;
-            this.level += 1;
+            this.level = parseInt(parseInt(this.level) + 1);
             this.wrcx += this.clockcx;
             this.clockcx = 0;
         }
@@ -184,3 +184,4 @@ class DefenderDeck {
     
     // Rest of the class functions go here
 }
+export default DefenderDeck;

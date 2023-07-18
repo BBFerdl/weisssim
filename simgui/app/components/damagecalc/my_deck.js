@@ -1,5 +1,3 @@
-import {uniform} from 'random';
-
 class AttackerDeck {
   constructor(clock=0, clockcx=0, level=3, deck=20, cx=7, wr=0, wrcx=0, trigger=6) {
     this.clock = clock;
@@ -18,7 +16,7 @@ class AttackerDeck {
       if (this.deck == 0) {
         this.refresh();
       }
-      const rnumber = uniform(0, 1);
+      const rnumber = Math.random();
       const rtracker = this.cx / this.deck;
       this.deck -= 1;
       if (rtracker > rnumber) {
@@ -38,7 +36,7 @@ class AttackerDeck {
       if (this.deck == 0) {
         this.refresh();
       }
-      const rnumber = uniform(0, 1);
+      const rnumber = Math.random();
       const rtracker = this.trigger / this.deck;
       this.deck -= 1;
       if (rtracker > rnumber) {
@@ -70,7 +68,7 @@ class AttackerDeck {
   }
 
   refreshpenalty() {
-    const rnumber = uniform(0, 1);
+    const rnumber = Math.random();
     const rtracker = this.cx / this.deck;
     this.deck -= 1;
     if (rnumber >= rtracker) {

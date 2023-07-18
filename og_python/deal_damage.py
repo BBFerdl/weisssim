@@ -50,7 +50,7 @@ class DefenderDeck:
             else:
                 self.wr += 1
     
-    def check(self, amount, keepcx):
+    def check(self, amount, keepcx=0):
             amount -= self.solutiondeck
             for i in range(amount):
                 if self.deck > 0:
@@ -84,7 +84,7 @@ class DefenderDeck:
         if wrreliant:
             if self.wr - self.wrcx < amount:
                 amount = self.wr - self.wrcx
-        deck += amount                
+        self.deck += amount                
             
     def damagecheck(self, soul):
         for i in range(soul):

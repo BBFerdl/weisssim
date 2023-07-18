@@ -1,14 +1,16 @@
-import { DefenderDeck } from './deal_damage.js';
-import { AttackerDeck } from './my_deck.js';
+import DefenderDeck from './deal_damage.js';
+import AttackerDeck from './my_deck.js';
 
 let counts = {};
 const baselevel = 3;
 const baseclock = 0;
 const configuration = [30, 25, 20];
 const cxconfiguration = [8, 6];
+
+const start_time = Date.now();
 for (let simu2 = 0; simu2 < cxconfiguration.length; simu2++) {
   for (let simu = 0; simu < configuration.length; simu++) {
-    const attempts = 10000000;
+    const attempts = 10000;
     counts = {};
     for (let i = 0; i < attempts; i++) {
       const ws = new DefenderDeck({
@@ -17,47 +19,25 @@ for (let simu2 = 0; simu2 < cxconfiguration.length; simu2++) {
         wr: 0,
         wrcx: 0,
         level: baselevel,
-        clock: baseclock,
+        clock: 0
       });
       const tr = new AttackerDeck({
         deck: 20,
         trigger: 6,
       });
-      for (let k = 0; k < 3; k++) {
-        let millcount = 3;
-        let fromdeck = false;
-        if (millcount >= ws.deck) {
-          millcount = ws.deck;
-          fromdeck = true;
-        }
-        const hit = ws.mill(millcount);
-        if (hit === 1 || hit === 2) {
-          ws.sticks({ soul: 1, cx: 1 });
-          ws.sticks({ soul: 1, cx: 0 });
-        }
-        if (hit === 0) {
-          ws.sticks({ soul: 1, cx: 0 });
-        }
-        if (hit === 3) {
-          ws.sticks({ soul: 1, cx: 1 });
-        }
-        if (fromdeck === true && hit > 0) {
-          ws.deck -= 1;
-          ws.cx -= 1;
-        }
-        if (fromdeck === true && hit < 3) {
-          ws.deck -= 1;
-        }
-        if (fromdeck === false && hit > 0) {
-          ws.wr -= 1;
-          ws.wrcx -= 1;
-        }
-        if (fromdeck === false && hit < 3) {
-          ws.wr -= 1;
+      // origami and aki (and niji kanata)
+      for (let j = 0; j < 3; j++) {
+        ws.check({ amount: 1, keepcx: 1 });
+        ws.check({ amount: 1, keepcx: 1 });
+        ws.check({ amount: 1, keepcx: 1 });
+        const amount = ws.mill(4);
+        for (let i = 0; i < amount; i++) {
+          ws.damagecheck(1);
         }
         ws.damagecheck(tr.triggerdamage());
       }
       ws.mill(1);
+  
       const combo = `${ws.level},${ws.clock}`;
       if (combo in counts) {
         counts[combo] += 1;
@@ -67,13 +47,18 @@ for (let simu2 = 0; simu2 < cxconfiguration.length; simu2++) {
     }
     let aggregate_count = attempts;
     console.log(`${configuration[simu]}/${cxconfiguration[simu2]}`);
+    let arr = [];
     for (const combo in counts) {
+      arr.push(combo);
+    }
+    arr.sort();
+    for(const combo of arr){
       const count = counts[combo];
       const percentage = (aggregate_count / attempts) * 100;
       aggregate_count -= count;
       const [level, clock] = combo.split(',');
       if (level < 5) {
-        console.log(`${combo}: ${percentage.toFixed(2)}% and [${count}]x`);
+        console.log(`${level}/${clock}:${percentage.toFixed(2)}% and [${count}]x`);
       }
     }
     const end_time = Date.now();
